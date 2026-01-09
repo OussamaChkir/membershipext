@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace membershipext\Membershipext\Domain\Repository;
 
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 /**
  * This file is part of the "membershipext" Extension for TYPO3 CMS.
@@ -24,7 +28,9 @@ class MembershipRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     public function __construct()
     {
         parent::__construct();
+        /** @var QuerySettingsInterface $querySettings */
         $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
+        // Show comments from all pages
         $querySettings->setRespectStoragePage(false);
         $this->setDefaultQuerySettings($querySettings);
     }
@@ -39,49 +45,25 @@ class MembershipRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
         // Search filter
         if (!empty($search)) {
-            $constraints[] = $query->like('street', '%' . $search . '%');
+            $constraints[] = $query->logicalOr(
+                $query->like('city', '%' . $search . '%'),
+                $query->like('street', '%' . $search . '%'),
+                $query->like('email', '%' . $search . '%'),
+                $query->like('phone', '%' . $search . '%')
+            );
             // Add more fields to search as needed, e.g., $query->like('city', '%' . $search . '%')
         }
-
         // Category filter
         if (!empty($categories)) {
             $constraints[] = $query->in('categories.uid', $categories);
         }
-
+        
         if (!empty($constraints)) {
-            $query->matching($query->logicalAnd($constraints));
+            $query->matching($query->logicalOr(...$constraints));
         }
 
         return $query->execute();
-    }
 
-    /**
-     * Find memberships by search term and categories
-     *
-     * @param string $search
-     * @param array $categories
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
-     */
-    public function findBySearchTermAndCategories(string $search, array $categories): \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
-    {
-        $query = $this->createQuery();
-        $constraints = [];
-
-        // Search term constraint
-        if (!empty($search)) {
-            $constraints[] = $query->like('title', '%' . $search . '%'); // Adjust 'title' to your field
-        }
-
-        // Category constraint
-        if (!empty($categories)) {
-            $constraints[] = $query->contains('categories', $categories);
-        }
-
-        if (!empty($constraints)) {
-            $query->matching($query->logicalAnd(...$constraints));
-        }
-
-        return $query->execute();
     }
 
 }

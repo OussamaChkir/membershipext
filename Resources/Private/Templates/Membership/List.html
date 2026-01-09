@@ -8,10 +8,10 @@
     <f:flashMessages />
 
     <!-- Filter Form -->
-    <f:form action="list" controller="Membership" extensionName="Membershipext" pluginName="Membership" method="POST" additionalAttributes="{id: 'filterForm'}">
+    <f:form action="list" method="POST" arguments="{search:search,selectedCategories: selectedCategories}" additionalAttributes="{id: 'filterForm'}">
       <div>
         <h3>Search</h3>
-        <f:form.textfield name="search" id="searchInput" value="{search}" placeholder="Search memberships..." />
+        <f:form.textfield name="search" id="filterForm" value="{search}" placeholder="Search memberships..." />
       </div>
       <div>
         <h3>Filter by Category</h3>

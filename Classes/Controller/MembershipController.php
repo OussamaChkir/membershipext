@@ -7,7 +7,7 @@ namespace membershipext\Membershipext\Controller;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3Fluid\Fluid\View\StandaloneView;
-
+use \Membershipext\Domain\Repository\MembershipRepository;
 /**
  * This file is part of the "membershipext" Extension for TYPO3 CMS.
  *
@@ -88,21 +88,21 @@ class MembershipController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContr
     public function listAction(): \Psr\Http\Message\ResponseInterface
     {
         $search = $this->request->hasArgument('search') ? $this->request->getArgument('search') : '';
-        $categoriesearch = $this->request->hasArgument('categories') ? (array)$this->request->getArgument('categories') : [];
+        $selectedCategories = $this->request->hasArgument('categories') ? (array)$this->request->getArgument('categories') : [];
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_category');
         $categories = $queryBuilder->select('title', 'uid')->from('sys_category')->executeQuery()->fetchAllAssociative();
         if (!empty($search)) {
-            $memberships = $this->membershipRepository->findByFilters($search, $categoriesearch);
+            $memberships = $this->membershipRepository->findByFilters($search, $selectedCategories);
             
         } else {
-            $memberships = $this->membershipRepository->findByFilters($search, $categoriesearch);
+            $memberships = $this->membershipRepository->findByFilters($search, $selectedCategories);
         }
 
         $this->view->assignMultiple([
             'memberships' => $memberships,
             'search' => $search,
             'categories' => $categories,
-            'selectedCategories' => $categoriesearch
+            'selectedCategories' => $selectedCategories
         ]);
         return $this->htmlResponse();
     }
