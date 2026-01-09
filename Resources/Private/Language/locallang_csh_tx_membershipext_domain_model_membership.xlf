@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="EXT:membershipext/Resources/Private/Language/locallang_csh_tx_membershipext_domain_model_membership.xlf" date="2025-10-13T11:56:42Z" product-name="membershipext">
+		<header/>
+		<body>
+			<trans-unit id="street.description" resname="street.description">
+				<source>street</source>
+			</trans-unit>
+			<trans-unit id="zip.description" resname="zip.description">
+				<source>zip</source>
+			</trans-unit>
+			<trans-unit id="city.description" resname="city.description">
+				<source>city</source>
+			</trans-unit>
+			<trans-unit id="phone.description" resname="phone.description">
+				<source>phone</source>
+			</trans-unit>
+			<trans-unit id="email.description" resname="email.description">
+				<source>email</source>
+			</trans-unit>
+			<trans-unit id="www.description" resname="www.description">
+				<source>www</source>
+			</trans-unit>
+			<trans-unit id="tags.description" resname="tags.description">
+				<source>tags</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

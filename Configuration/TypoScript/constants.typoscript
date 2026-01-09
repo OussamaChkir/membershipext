@@ -1,0 +1,14 @@
+plugin.tx_membershipext_membershipplug {
+    view {
+        # cat=plugin.tx_membershipext_membershipplug/file; type=string; label=Path to template root (FE)
+        templateRootPath = EXT:membershipext/Resources/Private/Templates/
+        # cat=plugin.tx_membershipext_membershipplug/file; type=string; label=Path to template partials (FE)
+        partialRootPath = EXT:membershipext/Resources/Private/Partials/
+        # cat=plugin.tx_membershipext_membershipplug/file; type=string; label=Path to template layouts (FE)
+        layoutRootPath = EXT:membershipext/Resources/Private/Layouts/
+    }
+    persistence {
+        # cat=plugin.tx_membershipext_membershipplug//a; type=string; label=Default storage PID
+        storagePid =
+    }
+}

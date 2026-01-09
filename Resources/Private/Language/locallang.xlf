@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="EXT:membershipext/Resources/Private/Language/locallang.xlf" date="2025-10-13T11:56:42Z" product-name="membershipext">
+		<header/>
+		<body>
+			<trans-unit id="tx_membershipext_domain_model_membership" resname="tx_membershipext_domain_model_membership">
+				<source>Membership</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.description" resname="tx_membershipext_domain_model_membership.description">
+				<source>Membership</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.street" resname="tx_membershipext_domain_model_membership.street">
+				<source>Street</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.street.description" resname="tx_membershipext_domain_model_membership.street.description">
+				<source>Street</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.zip" resname="tx_membershipext_domain_model_membership.zip">
+				<source>Zip</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.zip.description" resname="tx_membershipext_domain_model_membership.zip.description">
+				<source>Zip</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.city" resname="tx_membershipext_domain_model_membership.city">
+				<source>City</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.city.description" resname="tx_membershipext_domain_model_membership.city.description">
+				<source>City</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.phone" resname="tx_membershipext_domain_model_membership.phone">
+				<source>Phone</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.phone.description" resname="tx_membershipext_domain_model_membership.phone.description">
+				<source>Phone</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.email" resname="tx_membershipext_domain_model_membership.email">
+				<source>Email</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.email.description" resname="tx_membershipext_domain_model_membership.email.description">
+				<source>Email</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.www" resname="tx_membershipext_domain_model_membership.www">
+				<source>Www</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.www.description" resname="tx_membershipext_domain_model_membership.www.description">
+				<source>Www</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.tags" resname="tx_membershipext_domain_model_membership.tags">
+				<source>Tags</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_membership.tags.description" resname="tx_membershipext_domain_model_membership.tags.description">
+				<source>Tags</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_tag" resname="tx_membershipext_domain_model_tag">
+				<source>Tag</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_tag.description" resname="tx_membershipext_domain_model_tag.description">
+				<source>Tag</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_tag.nametag" resname="tx_membershipext_domain_model_tag.nametag">
+				<source>Nametag</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_tag.nametag.description" resname="tx_membershipext_domain_model_tag.nametag.description">
+				<source>Nametag</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_tag.descriptiontag" resname="tx_membershipext_domain_model_tag.descriptiontag">
+				<source>Descriptiontag</source>
+			</trans-unit>
+			<trans-unit id="tx_membershipext_domain_model_tag.descriptiontag.description" resname="tx_membershipext_domain_model_tag.descriptiontag.description">
+				<source>Descriptiontag</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

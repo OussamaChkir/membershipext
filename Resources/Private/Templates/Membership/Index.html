@@ -1,0 +1,48 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Default" />
+
+This template is responsible for creating a table of domain objects.
+
+If you modify this template, do not forget to change the overwrite settings
+in /Configuration/ExtensionBuilder/settings.yaml:
+  Resources:
+    Private:
+      Templates:
+        Membership:
+          Index.html: keep
+
+Otherwise your changes will be overwritten the next time you save the extension in the extension builder
+
+<f:section name="content">
+    <h1>Listing for Membership</h1>
+
+    <f:flashMessages />
+
+    <table class="tx_membershipext">
+        <tr>
+            <th><f:translate key="tx_membershipext_domain_model_membership.street" /></th>
+            <th><f:translate key="tx_membershipext_domain_model_membership.zip" /></th>
+            <th><f:translate key="tx_membershipext_domain_model_membership.city" /></th>
+            <th><f:translate key="tx_membershipext_domain_model_membership.phone" /></th>
+            <th><f:translate key="tx_membershipext_domain_model_membership.email" /></th>
+            <th><f:translate key="tx_membershipext_domain_model_membership.www" /></th>
+            <th></th>
+            <th></th>
+        </tr>
+        <f:for each="{memberships}" as="membership">
+            <tr>
+                <td><f:link.action action="show" arguments="{membership : membership}">{membership.street}</f:link.action></td>
+                <td><f:link.action action="show" arguments="{membership : membership}">{membership.zip}</f:link.action></td>
+                <td><f:link.action action="show" arguments="{membership : membership}">{membership.city}</f:link.action></td>
+                <td><f:link.action action="show" arguments="{membership : membership}">{membership.phone}</f:link.action></td>
+                <td><f:link.action action="show" arguments="{membership : membership}">{membership.email}</f:link.action></td>
+                <td><f:link.action action="show" arguments="{membership : membership}">{membership.www}</f:link.action></td>
+                <td><f:link.action action="edit" arguments="{membership : membership}">Edit</f:link.action></td>
+                <td><f:link.action action="delete" arguments="{membership : membership}">Delete</f:link.action></td>
+            </tr>
+        </f:for>
+    </table>
+
+    <f:link.action action="new">New Membership</f:link.action>
+</f:section>
+</html>

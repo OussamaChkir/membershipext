@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="EXT:membershipext/Resources/Private/Language/locallang_csh_tx_membershipext_domain_model_tag.xlf" date="2025-10-13T11:56:42Z" product-name="membershipext">
+		<header/>
+		<body>
+			<trans-unit id="nametag.description" resname="nametag.description">
+				<source>nametag</source>
+			</trans-unit>
+			<trans-unit id="descriptiontag.description" resname="descriptiontag.description">
+				<source>descriptiontag</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
