@@ -1,4 +1,6 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:asset.script identifier="membershipfilterjs" src="EXT:t3package/Resources/Public/JavaScript/membership-filter.js" />
+
 <f:layout name="Default" />
 
 <f:section name="content">
@@ -8,78 +10,53 @@
     <f:flashMessages />
 
     <!-- Filter Form -->
-    <f:form action="list" method="POST" arguments="{search:search,selectedCategories: selectedCategories}" additionalAttributes="{id: 'filterForm'}">
+    <f:form action="ajaxList" method="POST" additionalAttributes="{
+      id: 'filterForm',
+      'data-ajax-url': '{f:uri.action(action: \'List\')}'
+    }">
       <div>
         <h3>Search</h3>
-        <f:form.textfield name="search" id="filterForm" value="{search}" placeholder="Search memberships..." />
+        <f:form.textfield name="search" value="{search}" placeholder="Search memberships..." />
       </div>
       <div>
         <h3>Filter by Category</h3>
         <f:for each="{categories}" as="category">
           <label>
-            <f:form.checkbox name="categories[]" value="{category.uid}" checked="{f:if(condition: '{category.uid} in {selectedCategories}', then: 'checked', else: '')}" class="category-filter" />
+            <f:form.checkbox name="categories[]" value="{category.uid}"
+              checked="{f:if(condition: '{category.uid} in {selectedCategories}', then: 'checked', else: '')}"
+              class="category-filter" />
             {category.title}
           </label><br />
         </f:for>
       </div>
       <button type="submit">Apply Filter</button>
-      <f:link.action action="list" controller="Membership" extensionName="Membershipext" pluginName="Membership">Reset Filter</f:link.action>
+      <f:link.action action="list" controller="Membership" extensionName="Membershipext" pluginName="Membership">Reset
+        Filter</f:link.action>
     </f:form>
 
     <div class="tx_membershipext">
       <h2>Suchergebnisse ( <span id="membershipCount">{memberships -> f:count()}</span> )</h2>
-      <div id="membershipResults">
-        <f:for each="{memberships}" as="membership">
-          <f:link.action action="show" arguments="{membership: membership}">
-            <!-- TAGS DISPLAY -->
-            <div class="tags" style="margin-bottom: 10px;">
-              <f:if condition="{membership.categories}">
-                <p><strong>Categories:</strong>
-                  <f:for each="{membership.categories}" as="category" iteration="iterator">
-                    <span style="display: inline-block; background: #eee; padding: 3px 8px; border-radius: 5px; margin-right: 5px;">
-                      {category.title}
-                    </span>
-                  </f:for>
-                </p>
-              </f:if>
-            </div>
-
-            <div class="membership-block">
-              <div>
-                <p>
-                  <strong>
-                    <f:translate key="tx_membershipext_domain_model_membership.street" />
-                  </strong>
-                </p>
-                <p>
-                  {membership.street}
-                  {membership.city}
-                  {membership.zip}
-                </p>
-              </div>
-              <div>
-                <p>
-                  <strong>
-                    <f:translate key="tx_membershipext_domain_model_membership.phone" />
-                  </strong>
-                  {membership.phone}
-                </p>
-                <p>
-                  <strong>
-                    <f:translate key="tx_membershipext_domain_model_membership.email" />
-                  </strong>
-                  {membership.email}
-                </p>
-                <p>
-                  <strong>Website</strong>
-                  {membership.www}
-                </p>
-              </div>
-            </div>
-          </f:link.action>
-        </f:for>
+      <div class="align-items-stretch" id="membershipResults">
+        <f:render partial="Membership/Items" arguments="{memberships: memberships}" />
       </div>
+
+
+      <f:if condition="{totalCount} > {limit}">
+        <div class="text-center" id="loadMoreContainer">
+          <button class="primary-button" id="showMoreBtn" data-url="{f:uri.action(action:'list')}" data-limit="{limit}"
+            data-offset="{limit}" data-total="{totalCount}" data-search="{search}"
+            data-categories="{selectedCategoriesString}">
+            Load More
+          </button>
+        </div>
+      </f:if>
+
+
+
+
+
     </div>
   </div>
 </f:section>
+
 </html>

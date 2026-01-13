@@ -66,4 +66,57 @@ class MembershipRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
     }
 
+    public function findByFiltersPaginated(
+    string $search,
+    array $categories,
+    int $limit,
+    int $offset
+) {
+    $query = $this->createQuery();
+    $constraints = [];
+
+    if ($search) {
+        $constraints[] = $query->logicalOr(
+            $query->like('city', '%' . $search . '%'),
+            $query->like('street', '%' . $search . '%')
+        );
+    }
+
+    if (!empty($categories)) {
+        $constraints[] = $query->in('categories.uid', $categories);
+    }
+
+    if ($constraints) {
+        $query->matching($query->logicalAnd(...$constraints));
+    }
+
+    $query->setLimit($limit);
+    $query->setOffset($offset);
+
+    return $query->execute();
+}
+
+public function countByFilters(string $search, array $categories): int
+{
+    $query = $this->createQuery();
+    $constraints = [];
+
+    if ($search) {
+        $constraints[] = $query->logicalOr(
+            $query->like('city', '%' . $search . '%'),
+            $query->like('street', '%' . $search . '%')
+        );
+    }
+
+    if (!empty($categories)) {
+        $constraints[] = $query->in('categories.uid', $categories);
+    }
+
+    if ($constraints) {
+        $query->matching($query->logicalAnd(...$constraints));
+    }
+
+    return $query->count();
+}
+
 }

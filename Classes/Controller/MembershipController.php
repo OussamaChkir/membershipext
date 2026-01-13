@@ -6,8 +6,10 @@ namespace membershipext\Membershipext\Controller;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3Fluid\Fluid\View\StandaloneView;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 use \Membershipext\Domain\Repository\MembershipRepository;
+use TYPO3\CMS\Core\Http\JsonResponse;
+
 /**
  * This file is part of the "membershipext" Extension for TYPO3 CMS.
  *
@@ -53,7 +55,7 @@ class MembershipController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContr
         // Fetch memberships with limit
         $query = $this->membershipRepository->createQuery();
         $query->setLimit(50); // Prevent timeout; adjust as needed
-        $memberships = $this->membershipRepository->findByFilters($search, $categories, $query);
+        $memberships = $this->membershipRepository->findByFilters($search, $categories);
 
         // Render Fluid template
         $view = GeneralUtility::makeInstance(StandaloneView::class);
@@ -88,22 +90,74 @@ class MembershipController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContr
     public function listAction(): \Psr\Http\Message\ResponseInterface
     {
         $search = $this->request->hasArgument('search') ? $this->request->getArgument('search') : '';
-        $selectedCategories = $this->request->hasArgument('categories') ? (array)$this->request->getArgument('categories') : [];
+        $selectedCategories = $this->request->hasArgument('categories') ? (array) $this->request->getArgument('categories') : [];
+        $offset = $this->request->hasArgument('offset') ? (int) $this->request->getArgument('offset') : 0;
+        $limit = 3;
+
+        file_put_contents(
+            \TYPO3\CMS\Core\Core\Environment::getProjectPath() . '/var/debug_members.txt',
+            "Args: " . print_r($this->request->getArguments(), true) . "\n" .
+            "Offset: $offset\n",
+            FILE_APPEND
+        );
+
+        // pagination
+        $limit = 3;
+        $offset = $this->request->hasArgument('offset') ? (int) $this->request->getArgument('offset') : 0;
+
+        // categories
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_category');
         $categories = $queryBuilder->select('title', 'uid')->from('sys_category')->executeQuery()->fetchAllAssociative();
-        if (!empty($search)) {
-            $memberships = $this->membershipRepository->findByFilters($search, $selectedCategories);
-            
-        } else {
-            $memberships = $this->membershipRepository->findByFilters($search, $selectedCategories);
+        // memberships
+        $memberships = $this->membershipRepository
+            ->findByFiltersPaginated($search, $selectedCategories, $limit, $offset);
+
+        $totalCount = $this->membershipRepository
+            ->countByFilters($search, $selectedCategories);
+
+        file_put_contents(
+            \TYPO3\CMS\Core\Core\Environment::getProjectPath() . '/var/debug_members.txt',
+            "--- AJAX CALL ---\n" .
+            "Offset: $offset\n" .
+            "Limit: $limit\n" .
+            "Total Count: $totalCount\n" .
+            "Result Count: " . count($memberships) . "\n" .
+            "Search: $search\n" .
+            "Categories: " . print_r($selectedCategories, true) . "\n",
+            FILE_APPEND
+        );
+
+        // AJAX request → return only HTML
+        $isAjax = $this->request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest';
+
+        if ($isAjax) {
+            $view = GeneralUtility::makeInstance(StandaloneView::class);
+            $view->setRequest($this->request);
+            $view->setTemplatePathAndFilename(
+                'EXT:membershipext/Resources/Private/Templates/Membership/_Items.html'
+            );
+            $view->assign('memberships', $memberships);
+
+            $response = new JsonResponse([
+                'html' => $view->render(),
+                'hasMore' => ($offset + $limit) < $totalCount
+            ]);
+
+            // Force early exit in TYPO3 v12 by propagating the response
+            throw new \TYPO3\CMS\Core\Http\PropagateResponseException($response);
         }
 
+        // normal page load
         $this->view->assignMultiple([
             'memberships' => $memberships,
-            'search' => $search,
             'categories' => $categories,
-            'selectedCategories' => $selectedCategories
+            'search' => $search,
+            'selectedCategories' => $selectedCategories,
+            'selectedCategoriesString' => implode(',', $selectedCategories),
+            'totalCount' => $totalCount,
+            'limit' => $limit
         ]);
+
         return $this->htmlResponse();
     }
 

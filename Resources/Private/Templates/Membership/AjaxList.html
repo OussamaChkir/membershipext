@@ -1,90 +1,45 @@
-<script type="text/javascript">
-  var gk_isXlsx = false;
-  var gk_xlsxFileLookup = {};
-  var gk_fileData = {};
-  function filledCell(cell) {
-    return cell !== '' && cell != null;
-  }
-  function loadFileData(filename) {
-    if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-      try {
-        var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-        var firstSheetName = workbook.SheetNames[0];
-        var worksheet = workbook.Sheets[firstSheetName];
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+  <f:asset.script identifier="membershipfilterjs" src="EXT:t3package/Resources/Public/JavaScript/membership-filter.js" />
+<h2>
+  Suchergebnisse (
+  <span id="membershipCount">{memberships -> f:count()}</span>
+  )
+</h2>
 
-        // Convert sheet to JSON to filter blank rows
-        var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-        // Filter out blank rows (rows where all cells are empty, null, or undefined)
-        var filteredData = jsonData.filter(row => row.some(filledCell));
-
-        // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-        var headerRowIndex = filteredData.findIndex((row, index) =>
-          row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-        );
-        // Fallback
-        if (headerRowIndex === -1 || headerRowIndex > 25) {
-          headerRowIndex = 0;
-        }
-
-        // Convert filtered JSON back to CSV
-        var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-        csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-        return csv;
-      } catch (e) {
-        console.error(e);
-        return "";
-      }
-    }
-    return gk_fileData[filename] || "";
-  }
-</script>
 <f:for each="{memberships}" as="membership">
-  <f:link.action action="show" arguments="{membership : membership}">
-    <!-- TAGS DISPLAY tessst -->
-    <div class="tags" style="margin-bottom: 10px;">
-      <f:if condition="{membership.categories}">
-        <p><strong>categories:</strong>
-          <f:for each="{membership.categories}" as="category" iteration="iterator">
-            <span
-              style="display: inline-block; background: #eee; padding: 3px 8px; border-radius: 5px; margin-right: 5px;">
-              {category.title}
-            </span>
-          </f:for>
-        </p>
-      </f:if>
-    </div>
+  <a href="/membership-detail?tx_membershipext_membership[membership]={membership.uid}">
+
+    
+    <!-- Categories -->
+    <f:if condition="{membership.categories}">
+      <p>
+        <strong>Categories:</strong>
+        <f:for each="{membership.categories}" as="category">
+          <span class="category-badge">
+            {category.title}
+          </span>
+        </f:for>
+      </p>
+    </f:if>
 
     <div class="membership-block">
       <div>
+        <p><strong>Address</strong></p>
         <p>
-          <strong>
-            <f:translate key="tx_membershipext_domain_model_membership.street" />
-          </strong>
-        </p>
-        <p>
-          {membership.street}
-          {membership.city}
-          {membership.zip}
+          {membership.street} {membership.city} {membership.zip}
         </p>
       </div>
+
       <div>
-        <p>
-          <strong>
-            <f:translate key="tx_membershipext_domain_model_membership.phone" />
-          </strong>
-          {membership.phone}
-        </p>
-        <p>
-          <strong>
-            <f:translate key="tx_membershipext_domain_model_membership.email" />
-          </strong>
-          {membership.email}
-        </p>
-        <p>
-          <strong>Website</strong>
-          {membership.www}
-        </p>
+        <p><strong>Phone</strong> {membership.phone}</p>
+        <p><strong>Email</strong> {membership.email}</p>
+        <p><strong>Website</strong> {membership.www}</p>
       </div>
     </div>
-  </f:link.action>
+
+  </a>
 </f:for>
+
+<f:if condition="{memberships -> f:count()} == 0">
+  <p>No results found.</p>
+</f:if>

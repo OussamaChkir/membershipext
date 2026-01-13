@@ -1,0 +1,10 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:for each="{memberships}" as="membership">
+    <a href="#">
+        <div class="membership-block">
+            <p><strong>{membership.street}</strong></p>
+            <p>{membership.city} {membership.zip}</p>
+            <p>{membership.phone}</p>
+        </div>
+    </a>
+</f:for>
