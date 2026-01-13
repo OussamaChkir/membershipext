@@ -115,18 +115,6 @@ class MembershipController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionContr
         $totalCount = $this->membershipRepository
             ->countByFilters($search, $selectedCategories);
 
-        file_put_contents(
-            \TYPO3\CMS\Core\Core\Environment::getProjectPath() . '/var/debug_members.txt',
-            "--- AJAX CALL ---\n" .
-            "Offset: $offset\n" .
-            "Limit: $limit\n" .
-            "Total Count: $totalCount\n" .
-            "Result Count: " . count($memberships) . "\n" .
-            "Search: $search\n" .
-            "Categories: " . print_r($selectedCategories, true) . "\n",
-            FILE_APPEND
-        );
-
         // AJAX request → return only HTML
         $isAjax = $this->request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest';
 
